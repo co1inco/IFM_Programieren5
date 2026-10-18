@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Cagd;
 
@@ -6,6 +8,9 @@ namespace Cagd;
 public class ObjLoader
 {
 
+    private static readonly Regex VertexRe = new(@"v\s+(-?\d+\.\d+)\s+(-?\d+\.\d+)", RegexOptions.Compiled | RegexOptions.NonBacktracking);
+    private static readonly Regex FaceRe = new(@"f(?:\s+(\d+))", RegexOptions.Compiled | RegexOptions.NonBacktracking);
+    
     public static Obj Load(string path)
     {
         var lines = File.ReadAllLines(path);
@@ -20,8 +25,12 @@ public class ObjLoader
             
             if (line.StartsWith("v "))
             {
-                var parts = line.Split(' ');
-                points.Add(new Point2D { X = float.Parse(parts[1]), Y = float.Parse(parts[2]) });
+                var result = VertexRe.Match(line);
+                points.Add(new Point2D
+                {
+                    X = float.Parse(result.Groups[1].Value, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture),
+                    Y = float.Parse(result.Groups[2].Value, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture)
+                });
             }
             else if (line.StartsWith("f "))
             {
