@@ -2,129 +2,117 @@ mod point2d;
 mod vector2d;
 mod obj_parser;
 
-use bevy::picking::hover::Hovered;
 use bevy::prelude::*;
-use bevy::ui_widgets::{observe, Activate, Button};
-use crate::obj_parser::parse_obj;
+use crate::obj_parser::{parse_obj, Obj};
+use crate::point2d::Point2D;
+use crate::vector2d::Vector2D;
+
+const POINT_SCALE: f32 = 40.0;
+const POINT_RADIUS: f32 = 8.0;
 
 #[derive(Component)]
-struct Position {
-    x: f32,
-    y: f32
+#[allow(dead_code)]
+pub struct FacePoint {
+    pub point: Point2D,
 }
 
-fn print_position_system(query: Query<&Position>) {
-    for position in &query {
-        println!("position: {} {}", position.x, position.y);
-    }
+fn setup_camera(mut commands: Commands) {
+    commands.spawn(Camera2d);
 }
 
-struct Entity(u64);
+fn face_center(obj: &Obj, face_idx: usize) -> Option<Point2D> {
 
-fn hello_world() {
-    println!("hello world!");
-}
+    let Some(face) = obj.faces.get(face_idx) else { return None; };
 
-#[derive(Component)]
-struct Person;
-
-#[derive(Component)]
-struct Name(String);
-
-fn add_people(mut commands: Commands) {
-    commands.spawn((Person, Name("Elaina Proctor".to_string())));
-    commands.spawn((Person, Name("Renzo Hume".to_string())));
-    commands.spawn((Person, Name("Zayna Nieves".to_string())));
-}
-
-fn greet_people(query: Query<&Name, With<Person>>) {
-    for name in &query {
-        println!("hello {}!", name.0);
-    }
-}
-
-
-fn setup_obj() {
-
-    let obj = parse_obj("resources/Curve_1.obj");
-
-    for face in obj.faces {
-        println!("face: {:?}", face);
-        for vertex in face {
-            println!("vertex: {:?}", obj.vertices[vertex]);
+    let mut avg = Vector2D::default();
+    let mut count = 0;
+    for &vertex_idx in face {
+        if let Some(vertex) = obj.vertices.get(vertex_idx) {
+            avg = avg + vertex.to_vector();
+            count += 1;
         }
     }
 
+    return Some((avg / count as f32).to_point());
 }
 
+
+fn setup_obj(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+) {
+    let mut obj = parse_obj("resources/Curve_1.obj");
+
+    let mesh_handle = meshes.add(Circle::new(POINT_RADIUS));
+    let material_handle = materials.add(Color::srgb(0.9, 0.2, 0.2));
+    let center_material = materials.add(Color::srgb(0.1, 0.9, 0.9));
+
+    commands.spawn((
+        FacePoint { point: Point2D::new(0.0, 0.0) },
+        Mesh2d(mesh_handle.clone()),
+        MeshMaterial2d(center_material.clone()),
+    ));
+
+    for (face_idx, face) in obj.faces.iter().enumerate() {
+        println!("Face {}: {:?}", face_idx, face);
+
+        let center = face_center(&obj, face_idx).unwrap().to_vector();
+
+
+        for &vertex_idx in face {
+            if (vertex_idx >= obj.vertices.len()) {
+                continue;
+            }
+
+            let l = obj.vertices[vertex_idx].to_vector() - center;
+            obj.vertices[vertex_idx] = l.to_point();
+
+            if let Some(vertex) = obj.vertices.get(vertex_idx) {
+
+                println!("  Point (vertex {}): {:?}", vertex_idx + 1, vertex);
+
+                // Draw points
+                commands.spawn((
+                    FacePoint { point: *vertex },
+                    Mesh2d(mesh_handle.clone()),
+                    MeshMaterial2d(material_handle.clone()),
+                    Transform::from_xyz(
+                        (vertex.x) * POINT_SCALE,
+                        (vertex.y) * POINT_SCALE,
+                        0.0
+                    ),
+                ));
+            }
+        }
+    }
+
+    commands.insert_resource(obj);
+}
+
+fn draw_control_lines(obj: Option<Res<Obj>>, mut gizmos: Gizmos) {
+    if let Some(obj) = obj {
+        for face in &obj.faces {
+            if face.len() < 2 {
+                continue;
+            }
+            for i in 0..face.len()-1 {
+                let v1 = obj.vertices[face[i]];
+                let v2 = obj.vertices[face[(i + 1) % face.len()]];
+                gizmos.line_2d(
+                    Vec2::new(v1.x * POINT_SCALE, v1.y * POINT_SCALE),
+                    Vec2::new(v2.x * POINT_SCALE, v2.y * POINT_SCALE),
+                    Color::srgba(0.4, 0.6, 0.9, 0.6),
+                );
+            }
+        }
+    }
+}
 
 fn main() {
-
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_systems(Startup, (setup, setup_obj))
-        // .add_systems(Update, ( hello_world, greet_people))
+        .add_systems(Startup, (setup_camera, setup_obj))
+        .add_systems(Update, draw_control_lines)
         .run();
-}
-
-fn setup(mut commands: Commands, assets: Res<AssetServer>) {
-    // ui camera
-    commands.spawn(Camera2d);
-
-    // A full-screen container that centers the button.
-    commands.spawn((
-        Node {
-            width: percent(100),
-            height: percent(100),
-            align_items: AlignItems::Center,
-            justify_content: JustifyContent::Center,
-            ..default()
-        },
-        children![(
-            button(&assets),
-            // React to the button being clicked. `Button` fires an `Activate` event on a
-            // completed click, so we attach an observer for it right here on the button entity.
-            //
-            // Try it: this is where you'd run your own logic (start a game, open a menu, etc.).
-            observe(|_activate: On<Activate>| {
-                info!("Button clicked!");
-            }),
-        )],
-    ));
-}
-
-const NORMAL_BUTTON: Color = Color::srgb(0.15, 0.15, 0.15);
-const HOVERED_BUTTON: Color = Color::srgb(0.25, 0.25, 0.25);
-const PRESSED_BUTTON: Color = Color::srgb(0.35, 0.75, 0.35);
-
-fn button(asset_server: &AssetServer) -> impl Bundle {
-    (
-        // The headless button widget. It handles pointer/keyboard input and pressed-state
-        // tracking for us; we only provide the look below.
-        Button,
-        // `Hovered` is used by the picking backend to track if the pointer is over the button.
-        Hovered::default(),
-        Node {
-            width: px(150),
-            height: px(65),
-            border: UiRect::all(px(5)),
-            // horizontally center child text
-            justify_content: JustifyContent::Center,
-            // vertically center child text
-            align_items: AlignItems::Center,
-            border_radius: BorderRadius::MAX,
-            ..default()
-        },
-        BorderColor::all(Color::BLACK),
-        BackgroundColor(NORMAL_BUTTON),
-        children![(
-            Text::new("Button"),
-            TextFont {
-                font_size: FontSize::Px(33.0),
-                ..default()
-            },
-            TextColor(Color::srgb(0.9, 0.9, 0.9)),
-            TextShadow::default(),
-        )],
-    )
 }
