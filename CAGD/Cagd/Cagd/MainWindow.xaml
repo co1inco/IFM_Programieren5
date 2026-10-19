@@ -17,6 +17,46 @@
     
     <Window.Resources>
         <local:SubtractConverter x:Key="Sub"/>
+
+        <Style x:Key="DrawableContainerStyle" TargetType="ContentPresenter">
+            <Setter Property="Canvas.Left" Value="{Binding Position.X}"/>
+            <Setter Property="Canvas.Top" Value="{Binding Position.Y}"/>
+        </Style>
+
+        <ItemsPanelTemplate x:Key="DrawableItemsPanel">
+            <Canvas/>
+        </ItemsPanelTemplate>
+
+        <DataTemplate DataType="{x:Type local:DrawableRect}">
+            <Rectangle Width="{Binding Width}"
+                       Height="{Binding Height}"
+                       Fill="{Binding Color}"/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type local:DrawablePoint}">
+            <Ellipse Width="{Binding Radius}"
+                     Height="{Binding Radius}"
+                     Fill="{Binding Color}">
+                <Ellipse.RenderTransform>
+                    <TranslateTransform X="{Binding OffsetX}" Y="{Binding OffsetY}"/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type local:DrawableLine}">
+            <Line X1="{Binding P1.X}"
+                  Y1="{Binding P1.Y}"
+                  X2="{Binding P2.X}"
+                  Y2="{Binding P2.Y}"
+                  StrokeThickness="{Binding Thickness}"
+                  Stroke="{Binding Color}"/>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type local:DrawableCollection}">
+            <ItemsControl ItemsSource="{Binding Drawables}"
+                          ItemsPanel="{StaticResource DrawableItemsPanel}"
+                          ItemContainerStyle="{StaticResource DrawableContainerStyle}"/>
+        </DataTemplate>
     </Window.Resources>
     
     <Grid>
@@ -102,7 +142,8 @@
             <ItemsControl Background="#E8ECEF"
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"
-                          ItemsSource="{Binding Drawables}">
+                          ItemsSource="{Binding Drawables}"
+                          ItemContainerStyle="{StaticResource DrawableContainerStyle}">
                 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -131,44 +172,6 @@
                         </Canvas>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                
-                <ItemsControl.ItemContainerStyle>
-                    <Style TargetType="ContentPresenter">
-                        <Setter Property="Canvas.Left" Value="{Binding Position.X}"/>
-                        <Setter Property="Canvas.Top" Value="{Binding Position.Y}"/>
-                    </Style>
-                </ItemsControl.ItemContainerStyle>
-                
-                <ItemsControl.Resources>
-                    <DataTemplate DataType="{x:Type local:DrawableRect}">
-                        <Rectangle Width="{Binding Width}"
-                                   Height="{Binding Height}"
-                                   Fill="{Binding Color}"/>
-                    </DataTemplate>
-                
-                    <DataTemplate DataType="{x:Type local:DrawablePoint}">
-                        <Ellipse Width="{Binding Radius}"
-                                 Height="{Binding Radius}"
-                                 Fill="{Binding Color}">
-                            <Ellipse.RenderTransform>
-                                <TranslateTransform X="{Binding OffsetX}" Y="{Binding OffsetY}"/>
-                            </Ellipse.RenderTransform>
-                        </Ellipse>
-                    </DataTemplate>
-                    
-                    <DataTemplate DataType="{x:Type local:DrawableLine}">
-                        <Line X1="{Binding P1.X}"
-                              Y1="{Binding P1.Y}"
-                              X2="{Binding P2.X}"
-                              Y2="{Binding P2.Y}"
-                              StrokeThickness="{Binding Thickness}"
-                              Stroke="{Binding Color}"/>
-                    </DataTemplate>
-                    
-                    <DataTemplate DataType="{x:Type local:DrawableCollection}">
-                        <ItemsControl ItemsSource="{Binding Drawables}"></ItemsControl>
-                    </DataTemplate>
-                </ItemsControl.Resources>
             </ItemsControl>
         </Viewbox>
     </Grid>
