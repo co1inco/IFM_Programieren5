@@ -88,6 +88,7 @@
                     <Button Content="- Point" Command="{Binding RemovePointCommand}" Margin="0,0,6,6" Padding="10,4"/>
                     <Button Content="Clear" Command="{Binding ClearCommand}" Margin="0,0,6,6" Padding="10,4"/>
                     <Button Content="Reset View" Command="{Binding ResetViewCommand}" Margin="0,0,6,6" Padding="10,4"/>
+                    <Button Content="Center Object" Command="{Binding CenterObjectCommand}" Margin="0,0,6,6" Padding="10,4"/>
                 </WrapPanel>
 
                 <!-- Points List -->

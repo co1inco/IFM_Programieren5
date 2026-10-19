@@ -98,6 +98,14 @@ public partial class PolygonTrainViewModel : ObservableObject
 
     public int Count => Points.Count;
 
+
+    public Point2D GetCenter()
+    {
+        var a = Points.Aggregate(Point2D.Zero, (acc, p) => acc + p.Position.ToVector());
+        return (a.ToVector() / (float)Points.Count).ToPoint();
+    }
+    
+    
     [RelayCommand]
     public void AddPoint(Point2D? point = null)
     {

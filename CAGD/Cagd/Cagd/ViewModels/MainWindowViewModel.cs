@@ -67,11 +67,6 @@ public partial class MainWindowViewModel : ObservableObject
         }
     }
 
-    /// <summary>
-    /// Backward-compatible alias for existing bindings if referenced.
-    /// </summary>
-    public PolygonTrainViewModel BezieObject => PolygonTrain;
-
     public ObservableCollection<IDrawableObject> Drawables { get; } = [];
 
     [RelayCommand]
@@ -156,11 +151,14 @@ public partial class MainWindowViewModel : ObservableObject
     //     // CanvasTransform += new Vector2D(args.);
     // }
 
-    private void OnPolygonDrawablesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    [RelayCommand]
+    private void CenterObject()
     {
-        RebuildAllDrawables();
+        var objCenter = PolygonTrain.GetCenter();
+        CanvasTransform = _canvasResolution / new Vector2D(2) - objCenter.ToVector();
     }
-
+    
+    
     private void RebuildAllDrawables()
     {
         Drawables.Clear();

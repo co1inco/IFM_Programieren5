@@ -2,9 +2,12 @@ namespace Cagd;
 
 public record Vector2D(float X, float Y)
 {
+    public Vector2D(float p) : this(p, p) { }
+    
     public int E => 0;
     
     public static Vector2D Zero => new Vector2D(0,0);
+    
     
     public Point2D ToPoint() => new Point2D(X, Y);
     
