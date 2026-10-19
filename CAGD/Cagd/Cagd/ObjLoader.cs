@@ -26,11 +26,10 @@ public class ObjLoader
             if (line.StartsWith("v "))
             {
                 var result = VertexRe.Match(line);
-                points.Add(new Point2D
-                {
-                    X = float.Parse(result.Groups[1].Value, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture),
-                    Y = float.Parse(result.Groups[2].Value, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture)
-                });
+                points.Add(new Point2D(
+                    float.Parse(result.Groups[1].Value, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture),
+                    float.Parse(result.Groups[2].Value, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture)
+                ));
             }
             else if (line.StartsWith("f "))
             {
