@@ -115,6 +115,9 @@ public class ObjectManager
     private void UpdatePoints(Point2D point, PointData data)
     {
         
+        data.P.Position = point;
+        data.Next?.P1 = point; 
+        data.Prev?.P2 = point;
     }
 
     private void GenerateDrawables(IEnumerable<Point2D> points)

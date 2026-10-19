@@ -76,6 +76,7 @@
                 <ItemsControl.ItemContainerStyle>
                     <Style TargetType="ContentPresenter">
                         <Setter Property="Canvas.Left" Value="{Binding Position.X}">
+                            <!-- TODO: Does not work. Pos will be zero for some reason -->
                             <!-- <Setter.Value> -->
                             <!--     <MultiBinding Converter="{StaticResource Sub}"> -->
                             <!--         <Binding Path="Position.X"/> -->
