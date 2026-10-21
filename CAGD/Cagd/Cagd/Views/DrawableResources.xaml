@@ -1,0 +1,45 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Cagd">
+    
+    <Style x:Key="DrawableContainerStyle" TargetType="ContentPresenter">
+        <!-- TODO: Binding to unknown. Is there a better way? -->
+        <Setter Property="Canvas.Left" Value="{Binding Position.X}"/>
+        <Setter Property="Canvas.Top" Value="{Binding Position.Y}"/>
+    </Style>
+    
+    <ItemsPanelTemplate x:Key="DrawableItemsPanel">
+        <Canvas/>
+    </ItemsPanelTemplate>
+
+    <DataTemplate DataType="{x:Type local:DrawableRect}">
+        <Rectangle Width="{Binding Width}"
+                   Height="{Binding Height}"
+                   Fill="{Binding Color}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:DrawablePoint}">
+        <Ellipse Width="{Binding Radius}"
+                 Height="{Binding Radius}"
+                 Fill="{Binding Color}">
+            <Ellipse.RenderTransform>
+                <TranslateTransform X="{Binding OffsetX}" Y="{Binding OffsetY}"/>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+    </DataTemplate>
+        
+    <DataTemplate DataType="{x:Type local:DrawableLine}">
+        <Line X1="{Binding P1.X}"
+              Y1="{Binding P1.Y}"
+              X2="{Binding P2.X}"
+              Y2="{Binding P2.Y}"
+              StrokeThickness="{Binding Thickness}"
+              Stroke="{Binding Color}"/>
+    </DataTemplate>
+        
+    <DataTemplate DataType="{x:Type local:DrawableCollection}">
+        <ItemsControl ItemsSource="{Binding Drawables}"
+                      ItemsPanel="{StaticResource DrawableItemsPanel}"
+                      ItemContainerStyle="{StaticResource DrawableContainerStyle}"/>
+    </DataTemplate>
+</ResourceDictionary>

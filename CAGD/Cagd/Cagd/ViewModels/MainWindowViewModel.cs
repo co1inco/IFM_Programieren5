@@ -68,6 +68,8 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     public ObservableCollection<IDrawableObject> Drawables { get; } = [];
+    
+    public IndividualPointsViewModel IndividualPoints { get; } = new();
 
     [RelayCommand]
     private void Load()
@@ -168,11 +170,14 @@ public partial class MainWindowViewModel : ObservableObject
 
         Drawables.Add(new DrawableCollection([
             new DrawablePoint(new Point2D(-5, 5), 0.3f, Brushes.Blue),
-            new DrawablePoint(new Point2D(-5, -5), 0.3f, Brushes.Blue)
+            new DrawablePoint(new Point2D(-5, -5), 0.3f, Brushes.Blue),
+            new DrawableLine(new Point2D(0, 0), new Point2D(2, 0), 0.05f, Brushes.DarkGray),
+            new DrawableLine(new Point2D(0, 0), new Point2D(0, 2), 0.05f, Brushes.DarkGray),
         ]));
         
         // Active polygon drawables
         Drawables.Add(PolygonTrain.DrawableCollection);
+        Drawables.Add(IndividualPoints.DrawableCollection);
         // foreach (var d in PolygonTrain.DrawableCollection)
         // {
         //     Drawables.Add(d);

@@ -1,8 +1,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Cagd;
 
-public class ControlPointViewModel : ObservableObject
+public partial class ControlPointViewModel : ObservableObject
 {
     private float _x;
     private float _y;
@@ -76,5 +77,14 @@ public class ControlPointViewModel : ObservableObject
 
     public event EventHandler<Point2D>? PositionChanged;
 
+    public event EventHandler? Removed;
+    
     public Point2D ToPoint() => new(_x, _y);
+
+    [RelayCommand]
+    private void RemovePoint()
+    {
+        Removed?.Invoke(this, EventArgs.Empty);
+    }
+    
 }

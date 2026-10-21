@@ -17,10 +17,10 @@ public class PolygonTrainViewModelTests
 
         Assert.HasCount(3, vm.Points);
         // 3 points + 2 lines = 5 drawables
-        Assert.HasCount(5, vm.Drawables);
+        Assert.HasCount(5, vm.DrawableCollection.Drawables);
 
-        var pointDrawables = vm.Drawables.OfType<DrawablePoint>().ToList();
-        var lineDrawables = vm.Drawables.OfType<DrawableLine>().ToList();
+        var pointDrawables = vm.DrawableCollection.Drawables.OfType<DrawablePoint>().ToList();
+        var lineDrawables = vm.DrawableCollection.Drawables.OfType<DrawableLine>().ToList();
 
         Assert.HasCount(3, pointDrawables);
         Assert.HasCount(2, lineDrawables);
@@ -42,11 +42,11 @@ public class PolygonTrainViewModelTests
         // Add point
         vm.AddPoint(new Point2D(15, 5));
         Assert.HasCount(4, vm.Points);
-        Assert.HasCount(7, vm.Drawables); // 4 points + 3 lines
+        Assert.HasCount(7, vm.DrawableCollection.Drawables); // 4 points + 3 lines
 
         // Remove point
         vm.RemovePointAt(0);
         Assert.HasCount(3, vm.Points);
-        Assert.HasCount(5, vm.Drawables); // 3 points + 2 lines
+        Assert.HasCount(5, vm.DrawableCollection.Drawables); // 3 points + 2 lines
     }
 }

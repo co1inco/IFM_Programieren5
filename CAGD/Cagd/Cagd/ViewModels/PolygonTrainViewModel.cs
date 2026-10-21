@@ -168,6 +168,7 @@ public partial class PolygonTrainViewModel : ObservableObject
             foreach (ControlPointViewModel item in e.OldItems)
             {
                 item.PositionChanged -= OnPointPositionChanged;
+                item.Removed -= OnPointRemoveRequested;
             }
         }
 
@@ -176,6 +177,7 @@ public partial class PolygonTrainViewModel : ObservableObject
             foreach (ControlPointViewModel item in e.NewItems)
             {
                 item.PositionChanged += OnPointPositionChanged;
+                item.Removed += OnPointRemoveRequested;
             }
         }
 
@@ -218,6 +220,13 @@ public partial class PolygonTrainViewModel : ObservableObject
         }
     }
 
+    private void OnPointRemoveRequested(object? sender, EventArgs args)
+    {
+        if (sender is not ControlPointViewModel cpvm)
+            return;
+        RemovePoint(cpvm);
+    }
+    
     private void RebuildDrawables()
     {
         DrawableCollection.Drawables.Clear();

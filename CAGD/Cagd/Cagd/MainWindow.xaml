@@ -16,47 +16,13 @@
     </b:Interaction.Triggers>
     
     <Window.Resources>
-        <local:SubtractConverter x:Key="Sub"/>
-
-        <Style x:Key="DrawableContainerStyle" TargetType="ContentPresenter">
-            <Setter Property="Canvas.Left" Value="{Binding Position.X}"/>
-            <Setter Property="Canvas.Top" Value="{Binding Position.Y}"/>
-        </Style>
-
-        <ItemsPanelTemplate x:Key="DrawableItemsPanel">
-            <Canvas/>
-        </ItemsPanelTemplate>
-
-        <DataTemplate DataType="{x:Type local:DrawableRect}">
-            <Rectangle Width="{Binding Width}"
-                       Height="{Binding Height}"
-                       Fill="{Binding Color}"/>
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type local:DrawablePoint}">
-            <Ellipse Width="{Binding Radius}"
-                     Height="{Binding Radius}"
-                     Fill="{Binding Color}">
-                <Ellipse.RenderTransform>
-                    <TranslateTransform X="{Binding OffsetX}" Y="{Binding OffsetY}"/>
-                </Ellipse.RenderTransform>
-            </Ellipse>
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Views/DrawableResources.xaml"/>
+                <ResourceDictionary Source="Views/ControlResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
         
-        <DataTemplate DataType="{x:Type local:DrawableLine}">
-            <Line X1="{Binding P1.X}"
-                  Y1="{Binding P1.Y}"
-                  X2="{Binding P2.X}"
-                  Y2="{Binding P2.Y}"
-                  StrokeThickness="{Binding Thickness}"
-                  Stroke="{Binding Color}"/>
-        </DataTemplate>
-        
-        <DataTemplate DataType="{x:Type local:DrawableCollection}">
-            <ItemsControl ItemsSource="{Binding Drawables}"
-                          ItemsPanel="{StaticResource DrawableItemsPanel}"
-                          ItemContainerStyle="{StaticResource DrawableContainerStyle}"/>
-        </DataTemplate>
     </Window.Resources>
     
     <Grid>
@@ -72,6 +38,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
@@ -95,44 +62,14 @@
                 <GroupBox Grid.Row="2" Header="Control Points" Padding="4">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <ItemsControl ItemsSource="{Binding PolygonTrain.Points}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type local:ControlPointViewModel}">
-                                    <Grid Margin="0,3">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="32"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <Border Grid.Column="0" Background="#E0E4E8" CornerRadius="3" Margin="0,2,4,2">
-                                            <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" 
-                                                       HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11"/>
-                                        </Border>
-
-                                        <TextBlock Grid.Column="1" Text="X:" VerticalAlignment="Center" Margin="2,0,2,0" Foreground="#555"/>
-                                        <TextBox Grid.Column="2" Margin="2,0,4,0" Padding="3,2"
-                                                 Text="{Binding X, UpdateSourceTrigger=PropertyChanged}"/>
-
-                                        <TextBlock Grid.Column="3" Text="Y:" VerticalAlignment="Center" Margin="2,0,2,0" Foreground="#555"/>
-                                        <TextBox Grid.Column="4" Margin="2,0,4,0" Padding="3,2"
-                                                 Text="{Binding Y, UpdateSourceTrigger=PropertyChanged}"/>
-
-                                        <Button Grid.Column="5" Content="✕" Margin="2,0,0,0" Padding="4,1"
-                                                ToolTip="Remove point"
-                                                Command="{Binding DataContext.PolygonTrain.RemovePointCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding}"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
                 </GroupBox>
 
+                <ContentControl Grid.Row="3" Content="{Binding IndividualPoints}"/>
+                
                 <!-- Footer / Status Info -->
-                <StackPanel Grid.Row="3" Margin="0,10,0,0">
+                <StackPanel Grid.Row="4" Margin="0,10,0,0">
                     <TextBlock Text="{Binding PolygonTrain.Count, StringFormat='Total Vertices: {0}'}" FontSize="12" Foreground="#666"/>
                 </StackPanel>
             </Grid>
