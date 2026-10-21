@@ -79,41 +79,42 @@
         </Border>
         
         <!-- Right Viewport: Canvas -->
-        <Viewbox Grid.Column="1" Stretch="Uniform" Margin="10">
-            <ItemsControl Background="#E8ECEF"
-                          VerticalAlignment="Stretch"
-                          HorizontalAlignment="Stretch"
-                          ItemsSource="{Binding Drawables}"
-                          ItemContainerStyle="{StaticResource DrawableContainerStyle}">
-                
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas Name="Canvas"
-                                Width="{Binding CanvasResolution.X}" 
-                                Height="{Binding CanvasResolution.Y}">
-                            <!-- <b:Interaction.Triggers> -->
-                            <!--     <b:EventTrigger EventName="MouseMove"> -->
-                            <!--         <b:InvokeCommandAction Command="{Binding MoveCanvasCommand}" -->
-                            <!--                                PassEventArgsToCommand="True"/> -->
-                            <!--     </b:EventTrigger> -->
-                            <!-- </b:Interaction.Triggers> -->
-                            <Canvas.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform
-                                        ScaleX="{Binding CanvasScale.X}"
-                                        ScaleY="{Binding CanvasScale.Y}"/>
-                                    <TranslateTransform
-                                        X="{Binding CanvasTransform.X}"
-                                        Y="{Binding CanvasTransform.Y}"/>
-                                </TransformGroup>
-                            </Canvas.RenderTransform>
-                            <Canvas.RenderTransformOrigin>
-                                <Binding Path="CanvasTransform"/>
-                            </Canvas.RenderTransformOrigin>
-                        </Canvas>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </Viewbox>
+        <Border Grid.Column="1" Background="Transparent"
+                ClipToBounds="True"
+                MouseLeftButtonDown="CanvasViewport_OnMouseLeftButtonDown"
+                MouseMove="CanvasViewport_OnMouseMove"
+                MouseLeftButtonUp="CanvasViewport_OnMouseLeftButtonUp"
+                MouseWheel="CanvasViewport_OnMouseWheel"
+                LostMouseCapture="CanvasViewport_OnLostMouseCapture">
+            <Viewbox Stretch="Uniform" Margin="10">
+                <ItemsControl x:Name="CanvasItemsControl"
+                              Background="#E8ECEF"
+                              ClipToBounds="True"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch"
+                              ItemsSource="{Binding Drawables}"
+                              ItemContainerStyle="{StaticResource DrawableContainerStyle}">
+                    
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Name="Canvas"
+                                    Width="{Binding CanvasResolution.X}" 
+                                    Height="{Binding CanvasResolution.Y}">
+                                <Canvas.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform
+                                            ScaleX="{Binding CanvasScale.X}"
+                                            ScaleY="{Binding CanvasScale.Y}"/>
+                                        <TranslateTransform
+                                            X="{Binding CanvasTransform.X}"
+                                            Y="{Binding CanvasTransform.Y}"/>
+                                    </TransformGroup>
+                                </Canvas.RenderTransform>
+                            </Canvas>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Viewbox>
+        </Border>
     </Grid>
 </Window>

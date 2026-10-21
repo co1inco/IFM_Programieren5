@@ -108,7 +108,7 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ResetView()
+    public void ResetView()
     {
         CanvasResolution = new Point2D(20, 20);
         CanvasTransform = new Point2D(10, 10);
@@ -116,25 +116,37 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void MoveCanvas(Vector2D v)
+    public void MoveCanvas(Vector2D v)
     {
         CanvasTransform += v;
     }
-    
-    // [RelayCommand]
-    // private void MoveCanvas(MouseEventArgs args)
-    // {
-    //     if (args.LeftButton != MouseButtonState.Pressed)
-    //         return;
-    //     
-    //     // CanvasTransform += new Vector2D(args.);
-    // }
+
+    public void Zoom(Point2D center, float factor)
+    {
+        var newScaleX = _canvasScale.X * factor;
+        var newScaleY = _canvasScale.Y * factor;
+
+        if (newScaleX < 0.01f || newScaleX > 100.0f)
+            return;
+
+        CanvasScale = new Point2D(newScaleX, newScaleY);
+
+        var newTransX = center.X * (1 - factor) + _canvasTransform.X * factor;
+        var newTransY = center.Y * (1 - factor) + _canvasTransform.Y * factor;
+
+        CanvasTransform = new Point2D(newTransX, newTransY);
+    }
+
+    public void Zoom(float factor)
+    {
+        Zoom(_canvasResolution / new Vector2D(2), factor);
+    }
 
     [RelayCommand]
-    private void CenterObject()
+    public void CenterObject()
     {
         var objCenter = PolygonTrain.GetCenter();
-        CanvasTransform = _canvasResolution / new Vector2D(2) - objCenter.ToVector();
+        CanvasTransform = _canvasResolution / new Vector2D(2) - (objCenter.ToVector() * _canvasScale.ToVector());
     }
     
     
