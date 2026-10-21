@@ -30,6 +30,9 @@ public partial class PolygonTrainViewModel : ObservableObject
         SetPoints(points);
     }
 
+    public event EventHandler<PolygonTrain>? OnTrainChanged;
+    
+    
     public ObservableCollection<ControlPointViewModel> Points { get; } = [];
 
     public DrawableCollection DrawableCollection { get; } = new();
@@ -184,7 +187,9 @@ public partial class PolygonTrainViewModel : ObservableObject
         {
             Points[i].Index = i;
         }
-
+        
+        OnTrainChanged?.Invoke(this, ToPolygonTrain());
+        
         RebuildDrawables();
     }
 
@@ -217,6 +222,8 @@ public partial class PolygonTrainViewModel : ObservableObject
         {
             _drawableLines[^1].P1 = newPos;
         }
+        
+        OnTrainChanged?.Invoke(this, ToPolygonTrain());
     }
 
     private void OnPointRemoveRequested(object? sender, EventArgs args)

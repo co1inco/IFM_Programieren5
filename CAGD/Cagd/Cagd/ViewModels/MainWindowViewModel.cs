@@ -18,7 +18,8 @@ public partial class MainWindowViewModel : ObservableObject
     public MainWindowViewModel()
     {
         PolygonTrain = new PolygonTrainViewModel();
-        // _polygonTrain.Drawables.CollectionChanged += OnPolygonDrawablesChanged;
+        BezierViewModel = new();
+        PolygonTrain.OnTrainChanged += (sender, train) => BezierViewModel.LoadPolygonTrain(train); 
 
         // Initialize origin marker and drawables
         RebuildAllDrawables();
@@ -48,6 +49,8 @@ public partial class MainWindowViewModel : ObservableObject
     
     public IndividualPointsViewModel IndividualPoints { get; } = new();
 
+    public BezierViewModel BezierViewModel { get; }
+    
     [RelayCommand]
     private void Load()
     {
@@ -167,5 +170,6 @@ public partial class MainWindowViewModel : ObservableObject
         // Active polygon drawables
         Drawables.Add(PolygonTrain.DrawableCollection);
         Drawables.Add(IndividualPoints.DrawableCollection);
+        Drawables.Add(BezierViewModel.DrawableCollection);
     }
 }

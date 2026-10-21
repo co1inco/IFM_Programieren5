@@ -11,4 +11,8 @@
         <views:IndividualPointsView/>
     </DataTemplate>
     
+    <DataTemplate DataType="{x:Type cagd:BezierViewModel}">
+        <views:BezieView/>
+    </DataTemplate>
+
 </ResourceDictionary>

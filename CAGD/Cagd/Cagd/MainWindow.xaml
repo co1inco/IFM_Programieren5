@@ -41,6 +41,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <!-- Header -->
@@ -69,10 +70,11 @@
                     </ScrollViewer>
                 </GroupBox>
 
-                <ContentControl Grid.Row="3" Content="{Binding IndividualPoints}"/>
+                <ContentControl Grid.Row="3" Content="{Binding BezierViewModel}"/>
+                <ContentControl Grid.Row="4" Content="{Binding IndividualPoints}"/>
                 
                 <!-- Footer / Status Info -->
-                <StackPanel Grid.Row="4" Margin="0,10,0,0">
+                <StackPanel Grid.Row="5" Margin="0,10,0,0">
                     <TextBlock Text="{Binding PolygonTrain.Count, StringFormat='Total Vertices: {0}'}" FontSize="12" Foreground="#666"/>
                 </StackPanel>
             </Grid>

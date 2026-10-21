@@ -14,22 +14,22 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            
-            <!-- Actions Toolbar -->
-            <WrapPanel Grid.Row="0" Margin="0,0,0,12">
-                <Button Content="+ Point" Command="{Binding AddPointCommand}" Margin="0,0,6,6" Padding="10,4"/>
-                <Button Content="- Point" Command="{Binding RemovePointCommand}" Margin="0,0,6,6" Padding="10,4"/>
-                <Button Content="Clear" Command="{Binding ClearPointsCommand}" Margin="0,0,6,6" Padding="10,4"/>
-            </WrapPanel>
 
             <!-- Points List -->
-            <GroupBox Grid.Row="1" Header="Control Points" Padding="4">
+            <GroupBox Grid.Row="0" Header="Control Points" Padding="4">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding Points}">
                         
                     </ItemsControl>
                 </ScrollViewer>
             </GroupBox>
+            
+            <!-- Actions Toolbar -->
+            <WrapPanel Grid.Row="1" Margin="0,0,0,0">
+                <Button Content="+ Point" Command="{Binding AddPointCommand}" Margin="0,0,6,6" Padding="10,4"/>
+                <Button Content="- Point" Command="{Binding RemovePointCommand}" Margin="0,0,6,6" Padding="10,4"/>
+                <Button Content="Clear" Command="{Binding ClearPointsCommand}" Margin="0,0,6,6" Padding="10,4"/>
+            </WrapPanel>
         </Grid>
     </GroupBox>
 </UserControl>
