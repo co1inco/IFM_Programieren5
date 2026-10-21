@@ -148,7 +148,7 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     public void CenterObject()
     {
-        var objCenter = PolygonTrain.GetCenter();
+        var objCenter = PolygonTrain.ToPolygonTrain().GetCenter();
         CanvasTransform = _canvasResolution / new Vector2D(2) - (objCenter.ToVector() * _canvasScale.ToVector());
     }
     

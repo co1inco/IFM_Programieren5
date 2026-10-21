@@ -74,14 +74,14 @@ public class PolygonTrain
     {
         if (_vertices.Count == 0)
             return Point2D.Zero;
-
-        var sum = Vector2D.Zero;
+        
+        Point2DMath sum = Vector2D.Zero;
         foreach (var p in _vertices)
         {
-            sum += p.ToVector();
+            sum += p;
         }
 
-        return (sum / (float)_vertices.Count).ToPoint();
+        return (sum / _vertices.Count).ToPoint();
     }
 
     private void OnVerticesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
