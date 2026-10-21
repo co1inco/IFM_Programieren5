@@ -12,14 +12,12 @@ namespace Cagd;
 /// </summary>
 public partial class PolygonTrainViewModel : ObservableObject
 {
-    private Brush _pointBrush = Brushes.Red;
     private Brush _lineBrush = Brushes.LightBlue;
     private float _pointRadius = 0.5f;
     private float _lineThickness = 0.1f;
     private bool _isClosed;
 
     // Track corresponding drawable items
-    private readonly List<DrawablePoint> _drawablePoints = [];
     private readonly List<DrawableLine> _drawableLines = [];
 
     public PolygonTrainViewModel()
@@ -38,12 +36,12 @@ public partial class PolygonTrainViewModel : ObservableObject
 
     public Brush PointBrush
     {
-        get => _pointBrush;
+        get => field;
         set
         {
-            if (SetProperty(ref _pointBrush, value))
+            if (SetProperty(ref field, value))
             {
-                foreach (var p in _drawablePoints) p.Color = value;
+                foreach (var p in Points) p.DrawablePoint.Color = value;
             }
         }
     }
@@ -67,7 +65,7 @@ public partial class PolygonTrainViewModel : ObservableObject
         {
             if (SetProperty(ref _pointRadius, value))
             {
-                foreach (var p in _drawablePoints) p.Radius = value;
+                foreach (var p in Points) p.DrawablePoint.Radius = value;
             }
         }
     }
@@ -193,10 +191,10 @@ public partial class PolygonTrainViewModel : ObservableObject
     {
         if (sender is not ControlPointViewModel pointVm) return;
         var index = Points.IndexOf(pointVm);
-        if (index < 0 || index >= _drawablePoints.Count) return;
+        if (index < 0) return;
 
         // Update point drawable
-        _drawablePoints[index].Position = newPos;
+        // _drawablePoints[index].Position = newPos;
 
         // Update connected lines
         // Previous line connecting index-1 to index
@@ -230,17 +228,13 @@ public partial class PolygonTrainViewModel : ObservableObject
     private void RebuildDrawables()
     {
         DrawableCollection.Drawables.Clear();
-        _drawablePoints.Clear();
         _drawableLines.Clear();
 
         if (Points.Count == 0) return;
 
-        // Create point drawables
-        for (int i = 0; i < Points.Count; i++)
+        foreach (var controlPointViewModel in Points)
         {
-            var dp = DrawablePoint.FromCenter(Points[i].Position, _pointRadius, _pointBrush);
-            _drawablePoints.Add(dp);
-            DrawableCollection.Drawables.Add(dp);
+            DrawableCollection.Drawables.Add(controlPointViewModel.DrawablePoint);
         }
 
         // Create line drawables connecting consecutive points

@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              d:DataContext="{d:DesignInstance cagd:ControlPointViewModel}"
+             MouseEnter="ControlPointView_OnMouseEnter"
+             MouseLeave="ControlPointView_OnMouseLeave"
              xmlns:local="clr-namespace:Cagd.Views"
              xmlns:cagd="clr-namespace:Cagd"
              mc:Ignorable="d"
