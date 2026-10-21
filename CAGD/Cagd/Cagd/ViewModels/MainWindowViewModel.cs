@@ -14,11 +14,10 @@ public partial class MainWindowViewModel : ObservableObject
     private Point2D _canvasResolution = new(20, 20);
     private Point2D _canvasTransform = new(10, 10);
     private Point2D _canvasScale = new(1, 1);
-    private PolygonTrainViewModel _polygonTrain;
 
     public MainWindowViewModel()
     {
-        _polygonTrain = new PolygonTrainViewModel();
+        PolygonTrain = new PolygonTrainViewModel();
         // _polygonTrain.Drawables.CollectionChanged += OnPolygonDrawablesChanged;
 
         // Initialize origin marker and drawables
@@ -43,29 +42,7 @@ public partial class MainWindowViewModel : ObservableObject
         set => SetProperty(ref _canvasScale, value);
     }
 
-    public PolygonTrainViewModel PolygonTrain
-    {
-        get => _polygonTrain;
-        set
-        {
-            if (_polygonTrain != value)
-            {
-                // if (_polygonTrain != null)
-                // {
-                //     _polygonTrain.Drawables.CollectionChanged -= OnPolygonDrawablesChanged;
-                // }
-
-                // if (SetProperty(ref _polygonTrain, value))
-                // {
-                //     if (_polygonTrain != null)
-                //     {
-                //         _polygonTrain.Drawables.CollectionChanged += OnPolygonDrawablesChanged;
-                //     }
-                //     RebuildAllDrawables();
-                // }
-            }
-        }
-    }
+    public PolygonTrainViewModel PolygonTrain { get; }
 
     public ObservableCollection<IDrawableObject> Drawables { get; } = [];
     
@@ -169,8 +146,8 @@ public partial class MainWindowViewModel : ObservableObject
         Drawables.Add(DrawablePoint.FromCenter(Point2D.Zero, 0.3f, Brushes.Black));
 
         Drawables.Add(new DrawableCollection([
-            new DrawablePoint(new Point2D(-5, 5), 0.3f, Brushes.Blue),
-            new DrawablePoint(new Point2D(-5, -5), 0.3f, Brushes.Blue),
+            // new DrawablePoint(new Point2D(-5, 5), 0.3f, Brushes.Blue),
+            // new DrawablePoint(new Point2D(-5, -5), 0.3f, Brushes.Blue),
             new DrawableLine(new Point2D(0, 0), new Point2D(2, 0), 0.05f, Brushes.DarkGray),
             new DrawableLine(new Point2D(0, 0), new Point2D(0, 2), 0.05f, Brushes.DarkGray),
         ]));
@@ -178,9 +155,5 @@ public partial class MainWindowViewModel : ObservableObject
         // Active polygon drawables
         Drawables.Add(PolygonTrain.DrawableCollection);
         Drawables.Add(IndividualPoints.DrawableCollection);
-        // foreach (var d in PolygonTrain.DrawableCollection)
-        // {
-        //     Drawables.Add(d);
-        // }
     }
 }

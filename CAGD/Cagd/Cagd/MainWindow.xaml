@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Cagd"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="CAGD - Polygon Train &amp; Curves" Height="600" Width="950">
@@ -61,7 +62,9 @@
                 <!-- Points List -->
                 <GroupBox Grid.Row="2" Header="Control Points" Padding="4">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding PolygonTrain.Points}">
+                        <ItemsControl ItemsSource="{Binding PolygonTrain.Points}"
+                                      dd:DragDrop.IsDragSource="True"
+                                      dd:DragDrop.IsDropTarget="True">
                         </ItemsControl>
                     </ScrollViewer>
                 </GroupBox>
